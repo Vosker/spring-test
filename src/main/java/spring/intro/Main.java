@@ -13,6 +13,6 @@ public class Main {
 
         userService.add(new User("nikita@gmail.com", "1234"));
         userService.add(new User("vaganov@gmail.com", "5678"));
-        userService.listUsers();
+        userService.listUsers().forEach(System.out::println);
     }
 }
