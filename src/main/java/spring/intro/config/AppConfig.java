@@ -13,22 +13,18 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import spring.intro.model.User;
 
 @Configuration
-@PropertySource("classpath:db.properties")
 @ComponentScan(basePackages = {
         "spring.intro.service",
         "spring.intro.dao"
 })
 public class AppConfig {
-    @Autowired
-    private Environment environment;
-
     @Bean
     public DataSource getDataSource() {
         BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName(environment.getProperty("db.driver"));
-        dataSource.setUrl(environment.getProperty("db.url"));
-        dataSource.setUsername(environment.getProperty("db.username"));
-        dataSource.setPassword(environment.getProperty("db.password"));
+        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/spring?serverTimeZone=UTC");
+        dataSource.setUsername("root");
+        dataSource.setPassword("1234");
         return dataSource;
     }
 
@@ -37,8 +33,10 @@ public class AppConfig {
         LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
         factoryBean.setDataSource(getDataSource());
         Properties properties = new Properties();
-        properties.put("hibernate.show_sql", environment.getProperty("hibernate.show_sql"));
-        properties.put("hibernate.hbm2ddl.auto", environment.getProperty("hibernate.hbm2ddl.auto"));
+        properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
+        properties.put("hibernate.show_sql", "true");
+        properties.put("hibernate.hbm2ddl.auto", "create-drop");
+        properties.put("hibernate.format_sql", "true");
         factoryBean.setHibernateProperties(properties);
         factoryBean.setAnnotatedClasses(User.class);
         return factoryBean;
